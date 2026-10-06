@@ -1,0 +1,907 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Glosario</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🕸️</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/cytoscape@3.33.1/dist/cytoscape.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/layout-base@2.0.1/layout-base.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cose-base@2.2.0/cose-base.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/cytoscape-fcose@2.2.0/cytoscape-fcose.js"></script>
+<style>
+:root{
+  --papel:#ffffff; --tinta:#1d1d1b; --gris:#6f6f6a; --gris-claro:#a3a39d; --linea:#e4e4df; --suave:#f6f7f4;
+  --autor:#c4621d; --def:#2e7d4f; --lectura:#3b4cc0;
+  --antagonismo:#c8352e; --resonancia:#4f94d4; --filiacion:#3d3d3d; --variacion:#b07d12; --recepcion:#7a52a8;
+  --serif:"Lora", Georgia, "Times New Roman", serif;
+  --mono:"Fira Code", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+body{background:var(--papel);color:var(--tinta);font-family:var(--serif);display:flex;flex-direction:column;overflow:hidden}
+button,select,input{font-family:var(--mono);font-size:13px;color:var(--tinta)}
+button{background:var(--papel);border:1px solid var(--linea);border-radius:6px;padding:6px 10px;cursor:pointer}
+button:hover{border-color:var(--gris-claro)}
+button[aria-pressed="true"]{background:var(--tinta);color:var(--papel);border-color:var(--tinta)}
+:focus-visible{outline:2px solid var(--lectura);outline-offset:2px}
+
+header{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;padding:12px 18px;border-bottom:1px solid var(--linea)}
+.titulo{display:flex;align-items:baseline;gap:10px;margin-right:auto}
+.titulo span{font-family:var(--mono);font-size:12px;color:var(--gris)}
+#concepto{font-family:var(--serif);font-size:26px;font-weight:500;border:none;background:transparent;padding:0 4px 0 0;cursor:pointer;max-width:60vw}
+.buscador{position:relative}
+#buscar{width:220px;padding:6px 10px;border:1px solid var(--linea);border-radius:6px}
+#resultados{position:absolute;top:100%;left:0;right:0;min-width:260px;background:var(--papel);border:1px solid var(--linea);border-radius:6px;margin-top:4px;padding:4px;z-index:30;display:none;max-height:50vh;overflow:auto}
+#resultados button{display:block;width:100%;text-align:left;border:none;font-family:var(--serif);font-size:14px;padding:6px 8px}
+#resultados button small{font-family:var(--mono);font-size:11px;color:var(--gris);margin-left:6px}
+#resultados button:hover,#resultados button.activo{background:var(--suave)}
+.grupo{display:flex;gap:4px}
+
+main{position:relative;flex:1;display:flex;min-height:0}
+#lienzo{flex:1;min-width:0;position:relative}
+#cy{position:absolute;inset:0}
+
+#filtros{position:absolute;top:12px;left:12px;z-index:10;background:var(--papel);border:1px solid var(--linea);border-radius:8px;padding:12px 14px;width:270px;display:none;max-height:calc(100% - 24px);overflow:auto}
+#filtros.abierto{display:block}
+#filtros h3{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--gris);margin:12px 0 6px}
+#filtros h3:first-child{margin-top:0}
+#filtros label{display:flex;align-items:center;gap:8px;font-size:14px;padding:2px 0;cursor:pointer}
+#filtros select{width:100%;padding:5px}
+.muestra{display:inline-block;width:18px;height:3px;border-radius:2px;flex:none}
+.muestra.punteada{height:0;border-top:2px dashed currentColor;background:none!important}
+
+#leyenda{position:absolute;left:12px;bottom:12px;z-index:5;background:rgba(255,255,255,.92);border:1px solid var(--linea);border-radius:8px;padding:8px 12px;font-size:12.5px;display:grid;grid-template-columns:auto auto;gap:3px 16px}
+#leyenda div{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.punto{width:10px;height:10px;border-radius:50%;flex:none}
+#estado{position:absolute;right:12px;bottom:12px;z-index:5;display:flex;gap:6px;align-items:center;font-family:var(--mono);font-size:11.5px;color:var(--gris)}
+#estado button{font-size:11.5px;padding:4px 8px}
+#estado button.alerta{border-color:var(--variacion);color:var(--variacion)}
+
+#panel{width:min(440px,42vw);border-left:1px solid var(--linea);overflow:auto;padding:22px 26px 40px;display:none;background:var(--papel)}
+#panel.abierto{display:block}
+#panel .cerrar{float:right;margin:-6px -8px 0 8px}
+#panel .clase{font-family:var(--mono);font-size:12px;color:var(--gris);margin:0 0 6px}
+#panel h2{font-size:23px;line-height:1.25;font-weight:500;margin:0 0 10px}
+#panel h4{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--gris);margin:22px 0 6px}
+#panel p,#panel li{font-size:15.5px;line-height:1.6;margin:0 0 10px}
+#panel ul{padding-left:18px;margin:0 0 10px}
+#panel .meta{font-size:14.5px;color:var(--gris);line-height:1.5}
+#panel blockquote{margin:0 0 6px;padding:2px 0 2px 14px;border-left:2px solid var(--def);font-style:italic;font-size:15px;line-height:1.55}
+#panel .cita{margin-bottom:16px}
+#panel .cita p{margin:0 0 4px}
+#panel .chica{font-family:var(--mono);font-size:11.5px;color:var(--gris);line-height:1.5}
+#panel .rel{border-top:1px solid var(--linea);padding-top:10px;margin-top:10px}
+#panel .rel:first-of-type{border-top:none;margin-top:0}
+#panel .acciones{display:flex;gap:6px;margin-top:26px;flex-wrap:wrap}
+mark{background:#fff1c2;color:inherit;padding:0 2px;border-radius:2px}
+.insignia{display:inline-block;font-family:var(--mono);font-size:11px;padding:2px 7px;border-radius:10px;border:1px solid var(--linea);margin:0 4px 4px 0;color:var(--gris)}
+.insignia.ok{border-color:#b9d6c4;color:var(--def)}
+.insignia.dudosa{border-color:#e8cf8f;color:var(--variacion)}
+.enlace{border:none;padding:0;background:none;font-family:var(--serif);font-size:inherit;color:var(--tinta);text-decoration:underline;text-decoration-color:var(--gris-claro);text-underline-offset:3px;cursor:pointer}
+.enlace:hover{text-decoration-color:var(--tinta)}
+.enlace.autor{color:var(--autor)}
+.tipo-rel{font-family:var(--mono);font-size:12px;font-weight:500}
+
+#vacio{position:absolute;inset:0;display:none;align-items:center;justify-content:center;padding:24px;z-index:20;background:var(--papel)}
+#vacio.visible{display:flex}
+#vacio div{max-width:460px}
+#vacio h2{font-weight:500;font-size:24px;margin:0 0 10px}
+#vacio p{line-height:1.6}
+#tip{position:fixed;z-index:40;pointer-events:none;background:var(--tinta);color:var(--papel);font-size:13px;line-height:1.4;padding:6px 9px;border-radius:5px;max-width:300px;display:none}
+
+@media (max-width:760px){
+  header{padding:10px 12px}
+  #concepto{font-size:22px}
+  #buscar{width:150px}
+  .opcional{display:none}
+  main{flex-direction:column}
+  #panel{width:auto;height:56%;flex:none;border-left:none;border-top:1px solid var(--linea);padding:18px 18px calc(30px + env(safe-area-inset-bottom,0px))}
+  #leyenda{display:none}
+  #leyenda.abierto{display:grid;bottom:46px}
+  #filtros{width:auto;right:12px}
+}
+@media (min-width:761px){ .solo-movil{display:none} }
+@media (prefers-reduced-motion:reduce){ *{transition:none!important} }
+</style>
+</head>
+<body>
+<header>
+  <div class="titulo">
+    <span>Glosario</span>
+    <select id="concepto" aria-label="Concepto"></select>
+  </div>
+  <div class="buscador">
+    <input id="buscar" type="search" placeholder="Buscar autor, obra, concepto…" aria-label="Buscar" autocomplete="off">
+    <div id="resultados" role="listbox"></div>
+  </div>
+  <div class="grupo" role="group" aria-label="Vista">
+    <button id="vista-red" aria-pressed="true">Red</button>
+    <button id="vista-tiempo" aria-pressed="false">Tiempo</button>
+  </div>
+  <button id="btn-filtros" aria-expanded="false">Filtros</button>
+  <button id="btn-todo" aria-pressed="false" title="Mostrar autores, obras, citas y metáforas de todas las definiciones">Fuentes</button>
+  <button id="btn-png" class="opcional" title="Descargar la vista como imagen">Imagen</button>
+  <button id="btn-abrir" class="opcional" title="Previsualizar JSON de tu computadora sin subirlos">Abrir JSON</button>
+  <input id="archivos" type="file" accept=".json,application/json" multiple hidden>
+</header>
+
+<main>
+  <div id="lienzo">
+    <div id="cy" aria-label="Grafo de conceptos"></div>
+
+    <section id="filtros" aria-label="Filtros">
+      <h3>Relaciones</h3>
+      <div id="f-relaciones"></div>
+      <h3>Eje</h3>
+      <select id="f-eje"></select>
+      <h3>Conceptos</h3>
+      <label><input type="checkbox" id="f-pendientes" checked> Mostrar conceptos por explorar</label>
+      <label><input type="checkbox" id="f-define" checked> Unir definiciones a su concepto</label>
+    </section>
+
+    <section id="leyenda" aria-label="Leyenda"></section>
+
+    <div id="estado">
+      <span id="resumen"></span>
+      <button id="btn-leyenda" class="solo-movil">Leyenda</button>
+      <button id="btn-avisos">Sin advertencias</button>
+    </div>
+
+    <div id="vacio">
+      <div>
+        <h2>No encontré datos para dibujar</h2>
+        <p>En GitHub Pages, el visor lee <code>grafo.json</code>, que la Action genera a partir de la carpeta <code>nodos/</code>. Si estás abriendo el archivo en tu computadora, puedes cargar tus JSON a mano para previsualizarlos.</p>
+        <button id="btn-abrir-vacio">Abrir archivos JSON</button>
+      </div>
+    </div>
+  </div>
+  <aside id="panel" aria-live="polite"></aside>
+</main>
+<div id="tip"></div>
+
+<script>
+"use strict";
+/* ---------- constantes ---------- */
+const COLOR = {
+  tinta:"#1d1d1b", gris:"#6f6f6a", grisClaro:"#a3a39d", linea:"#d9d9d3",
+  autor:"#c4621d", def:"#2e7d4f", lectura:"#3b4cc0",
+  antagonismo:"#c8352e", resonancia:"#4f94d4", filiacion:"#3d3d3d", variacion:"#b07d12", recepcion:"#7a52a8"
+};
+const INTERPRETATIVAS = ["antagonismo","resonancia","filiacion","variacion","recepcion"];
+const NOMBRE_REL = {antagonismo:"Antagonismo", resonancia:"Resonancia", filiacion:"Filiación", variacion:"Variación", recepcion:"Recepción",
+  contraconcepto_de:"Contraconcepto", vecino_de:"Concepto vecino"};
+const NOMBRE_TIPO = {concepto:"Concepto", enfoque:"Enfoque", autor:"Autor", obra:"Obra", definicion:"Definición", cita:"Cita",
+  metafora:"Metáfora o modelo", caso:"Caso", lectura_caso:"Lectura del caso", campo:"Campo"};
+const ORDEN_ESTADO = {pendiente:0, indexado:1, seleccionado:2, desarrollado:3};
+const ESTRUCTURALES = ["pertenece_a","escribe","formula","define","fuente_de","sostiene","usa_modelo","aplica","sobre","contraconcepto_de","vecino_de","indexado_en"];
+const PREFIJO = {concepto:"concepto",enfoque:"enfoque",autor:"autor",obra:"obra",definicion:"def",cita:"cita",metafora:"metafora",caso:"caso",lectura_caso:"lectura",campo:"campo"};
+
+const estado = {
+  vista:"red", foco:"todos", todo:false, expandido:null, seleccion:null,
+  rels:new Set([...INTERPRETATIVAS,"conceptos"]), eje:"todos", pendientes:true, define:true
+};
+let G = null, idx = null, cy = null;
+
+/* ---------- utilidades ---------- */
+const $ = s => document.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const conMarcas = s => esc(s).replace(/\[REVISAR[^\]]*\]/g, m => `<mark>${m}</mark>`);
+const normal = s => String(s ?? "").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const claveArista = a => ["origen","tipo","destino","eje","segun"].map(k => a[k] ?? "").join("|");
+const rotuloCampo = k => { const t = k.replace(/_/g," "); return t.charAt(0).toUpperCase() + t.slice(1); };
+
+/* ---------- fusión (misma lógica que scripts/fusionar.py) ---------- */
+function fusionar(fuentes){
+  const nodos = new Map(), aristas = new Map(), ejes = new Map(), archivos = [], advertencias = [];
+  const avisar = (nivel, tipo, mensaje, archivo, id) => advertencias.push({nivel, tipo, mensaje, archivo, id});
+  const combinar = (dest, nuevo, archivo, etiqueta) => {
+    for (const [k, v] of Object.entries(nuevo)) {
+      if (k === "_fuentes") { for (const f of v || []) { dest._fuentes = dest._fuentes || []; if (!dest._fuentes.includes(f)) dest._fuentes.push(f); } continue; }
+      if (k === "estado") { if ((ORDEN_ESTADO[v] ?? -1) > (ORDEN_ESTADO[dest.estado] ?? -1)) dest.estado = v; continue; }
+      const vacio = x => x === undefined || x === null || x === "" || (Array.isArray(x) && !x.length);
+      if (vacio(dest[k])) dest[k] = v;
+      else if (JSON.stringify(dest[k]) !== JSON.stringify(v) && !vacio(v)) {
+        avisar("aviso","conflicto",`«${k}» difiere entre archivos; se conserva la versión de ${archivo}.`, archivo, etiqueta);
+        dest[k] = v;
+      }
+    }
+    dest._fuentes = dest._fuentes || [];
+    if (!nuevo._fuentes && !dest._fuentes.includes(archivo)) dest._fuentes.push(archivo);
+  };
+  for (const {nombre, datos} of fuentes) {
+    if (!datos || !Array.isArray(datos.nodos)) { avisar("error","estructura","El archivo no tiene una lista «nodos».", nombre); continue; }
+    if (Array.isArray(datos.archivos)) archivos.push(...datos.archivos);
+    else archivos.push({nombre, exploracion:datos.exploracion || {}, nodos:datos.nodos.length, aristas:(datos.aristas||[]).length});
+    if (Array.isArray(datos.advertencias)) advertencias.push(...datos.advertencias);
+    for (const e of datos.ejes || []) if (e.id) { if (!ejes.has(e.id)) ejes.set(e.id, {}); combinar(ejes.get(e.id), e, nombre, e.id); }
+    for (const n of datos.nodos) {
+      if (!n.id) { avisar("error","nodo_sin_id","Nodo sin identificador.", nombre); continue; }
+      if (!Array.isArray(datos.archivos)) {
+        if (!/^[a-z_]+:[a-z0-9][a-z0-9\-:]*$/.test(n.id)) avisar("aviso","id_mal_formado","El identificador tiene mayúsculas, tildes o espacios.", nombre, n.id);
+        const p = PREFIJO[n.tipo];
+        if (p && !n.id.startsWith(p + ":")) avisar("aviso","prefijo",`El tipo «${n.tipo}» debería usar el prefijo «${p}:».`, nombre, n.id);
+      }
+      if (!nodos.has(n.id)) nodos.set(n.id, {});
+      combinar(nodos.get(n.id), n, nombre, n.id);
+    }
+    for (const a of datos.aristas || []) {
+      const k = claveArista(a);
+      if (!aristas.has(k)) aristas.set(k, {});
+      combinar(aristas.get(k), a, nombre, k);
+    }
+  }
+  for (const [k, a] of aristas) {
+    const faltan = [a.origen, a.destino].filter(x => !nodos.has(x));
+    if (faltan.length) { avisar("error","arista_colgante",`La arista ${a.tipo} apunta a nodos inexistentes: ${faltan.join(", ")}. Se descartó.`, (a._fuentes||[]).join(", "), k); aristas.delete(k); }
+  }
+  const conectados = new Set();
+  for (const [k, a] of aristas) {
+    conectados.add(a.origen); conectados.add(a.destino);
+    if (a.eje && !ejes.has(a.eje)) avisar("aviso","eje_desconocido",`Eje no declarado: ${a.eje}`, (a._fuentes||[]).join(", "), k);
+  }
+  const vistos = new Map();
+  for (const [id, n] of nodos) {
+    if (!conectados.has(id)) avisar("aviso","aislado","Nodo sin aristas.", (n._fuentes||[]).join(", "), id);
+    if (!["autor","concepto","obra","enfoque"].includes(n.tipo)) continue;
+    const k = n.tipo + "|" + normal(n.etiqueta);
+    if (vistos.has(k) && vistos.get(k) !== id) avisar("aviso","posible_duplicado",`Misma etiqueta que ${vistos.get(k)}; ¿es la misma entidad con dos identificadores?`, null, id);
+    else vistos.set(k, id);
+  }
+  // quitar advertencias repetidas (al combinar un grafo ya fusionado con archivos nuevos)
+  const vistas = new Set();
+  const unicas = advertencias.filter(a => { const k = [a.tipo,a.id,a.mensaje].join("|"); if (vistas.has(k)) return false; vistas.add(k); return true; });
+  return {nodos, aristas:[...aristas.values()], ejes, archivos, advertencias:unicas};
+}
+
+/* ---------- índices ---------- */
+function indexar(){
+  const porOrigen = new Map(), porDestino = new Map();
+  for (const a of G.aristas) {
+    if (!porOrigen.has(a.origen)) porOrigen.set(a.origen, []);
+    if (!porDestino.has(a.destino)) porDestino.set(a.destino, []);
+    porOrigen.get(a.origen).push(a); porDestino.get(a.destino).push(a);
+  }
+  const salen = (id, tipo) => (porOrigen.get(id) || []).filter(a => !tipo || a.tipo === tipo);
+  const entran = (id, tipo) => (porDestino.get(id) || []).filter(a => !tipo || a.tipo === tipo);
+  const nodo = id => G.nodos.get(id);
+  const autorDe = def => (entran(def,"formula")[0] || {}).origen;
+  const enfoqueDe = autor => (salen(autor,"pertenece_a")[0] || {}).destino;
+  const anioDe = def => {
+    const n = nodo(def) || {};
+    const m = String(n.anio || n.periodo || "").match(/\d{4}/);
+    if (m) return +m[0];
+    const anios = entran(def,"fuente_de").map(a => (nodo(a.origen)||{}).anio_original).filter(Boolean);
+    return anios.length ? Math.min(...anios) : null;
+  };
+  const fuentesDe = def => {
+    const s = new Set();
+    const autor = autorDe(def); if (autor) s.add(autor);
+    for (const a of entran(def,"fuente_de")) s.add(a.origen);
+    for (const a of entran(def,"sostiene")) s.add(a.origen);
+    for (const a of salen(def,"usa_modelo")) s.add(a.destino);
+    for (const a of salen(def,"aplica")) { s.add(a.destino); for (const b of salen(a.destino,"sobre")) s.add(b.destino); }
+    return s;
+  };
+  const defsDeConcepto = c => entran(c,"define").map(a => a.origen);
+  return {salen, entran, nodo, autorDe, enfoqueDe, anioDe, fuentesDe, defsDeConcepto};
+}
+
+function nombreDef(id){
+  const autor = idx.nodo(idx.autorDe(id));
+  const anio = idx.anioDe(id);
+  const base = autor ? autor.etiqueta : (idx.nodo(id).etiqueta || id);
+  return anio ? `${base}, ${anio}` : base;
+}
+function rotuloNodo(n){
+  switch (n.tipo) {
+    case "definicion": return nombreDef(n.id);
+    case "autor": return n.nacimiento ? `${n.etiqueta} (${n.nacimiento}–${n.muerte ?? ""})` : n.etiqueta;
+    case "obra": return n.anio_original ? `${n.etiqueta} (${n.anio_original})` : n.etiqueta;
+    case "cita": { const w = String(n.original || n.traduccion || "cita").split(/\s+/); return "«" + w.slice(0, 4).join(" ") + (w.length > 4 ? "…»" : "»"); }
+    case "metafora": return /^[«"]/.test(n.etiqueta || "") ? n.etiqueta : `«${n.etiqueta}»`;
+    case "lectura_caso": return n.etiqueta || "Lectura del caso";
+    default: return n.etiqueta || n.id;
+  }
+}
+
+/* ---------- construcción del grafo ---------- */
+function elementos(){
+  const els = [];
+  for (const n of G.nodos.values()) {
+    const d = {id:n.id, tipo:n.tipo, estado:n.estado || "", label:rotuloNodo(n), etiqueta:n.etiqueta || ""};
+    if (n.tipo === "definicion" || n.tipo === "autor") {
+      const autor = n.tipo === "autor" ? n.id : idx.autorDe(n.id);
+      const enf = autor && idx.enfoqueDe(autor);
+      if (enf && G.nodos.has(enf)) d.parent = enf;
+    }
+    els.push({group:"nodes", data:d, classes:n.tipo});
+  }
+  G.aristas.forEach((a, i) => {
+    const eje = a.eje && G.ejes.get(a.eje);
+    const rot = (NOMBRE_REL[a.tipo] || a.tipo) + (eje && eje.polos ? ` (${eje.polos.join(" / ")})` : "");
+    els.push({group:"edges", data:{id:"a"+i, source:a.origen, target:a.destino, tipo:a.tipo, eje:a.eje || "", rotulo:rot, clave:claveArista(a)}, classes:a.tipo});
+  });
+  return els;
+}
+
+function anchoRotulo(n, tam){
+  const ctx = anchoRotulo.ctx || (anchoRotulo.ctx = document.createElement("canvas").getContext("2d"));
+  ctx.font = `500 ${tam}px Lora, Georgia, serif`;
+  return Math.ceil(ctx.measureText(n.data("label") || "").width) + tam * 1.1;
+}
+const ESTILO = [
+  {selector:"node", style:{"font-family":"Lora, Georgia, serif", "label":"data(label)", "text-wrap":"wrap", "text-max-width":170, "color":COLOR.tinta,
+    "font-size":12, "text-valign":"bottom", "text-margin-y":5, "width":10, "height":10, "background-color":COLOR.gris, "min-zoomed-font-size":6}},
+  {selector:"node.concepto", style:{"shape":"round-rectangle", "background-opacity":0, "border-width":0, "font-size":30, "font-weight":500,
+    "text-valign":"center", "text-margin-y":0, "width":n => anchoRotulo(n, 30), "height":44, "padding":0, "text-max-width":400}},
+  {selector:"node.concepto[estado = 'pendiente']", style:{"font-size":16, "font-style":"italic", "color":COLOR.gris, "border-width":1,
+    "border-style":"dashed", "border-color":"#bdbdb6", "width":n => anchoRotulo(n, 16), "height":30}},
+  {selector:"node.definicion", style:{"background-color":COLOR.def, "width":18, "height":18, "color":COLOR.autor, "font-size":15, "font-weight":500}},
+  {selector:"node.autor", style:{"shape":"diamond", "background-color":COLOR.autor, "width":15, "height":15, "color":COLOR.autor, "font-size":14}},
+  {selector:"node.obra", style:{"shape":"rectangle", "background-color":COLOR.tinta, "width":9, "height":11, "font-size":11.5}},
+  {selector:"node.cita", style:{"shape":"round-rectangle", "background-color":"#9a9a94", "width":8, "height":8, "font-size":10, "color":COLOR.gris}},
+  {selector:"node.metafora", style:{"background-color":"#b5b5ae", "width":8, "height":8, "font-size":12, "font-style":"italic", "color":COLOR.gris}},
+  {selector:"node.lectura_caso", style:{"shape":"round-rectangle", "background-color":COLOR.lectura, "width":11, "height":11, "color":COLOR.lectura}},
+  {selector:"node.caso", style:{"shape":"hexagon", "background-color":COLOR.lectura, "width":16, "height":16, "color":COLOR.lectura, "font-size":14}},
+  {selector:"node.enfoque", style:{"shape":"round-rectangle", "background-color":"#ffffff", "border-width":1, "border-color":"#cfd3c9", "color":"#4d5249",
+    "font-size":13, "font-style":"italic"}},
+  {selector:"node.enfoque:parent", style:{"background-color":"#f6f7f4", "padding":26, "text-valign":"top", "text-halign":"center", "text-margin-y":-6}},
+  {selector:"node.marca", style:{"background-opacity":0, "width":1, "height":1, "label":"data(label)", "font-family":"Fira Code, monospace",
+    "font-size":11, "color":COLOR.grisClaro, "text-valign":"center", "events":"no"}},
+  {selector:"node:selected", style:{"border-width":3, "border-color":COLOR.tinta, "border-style":"solid"}},
+
+  {selector:"edge", style:{"width":1, "line-color":COLOR.linea, "curve-style":"bezier", "target-arrow-shape":"none", "arrow-scale":0.7}},
+  {selector:"edge.define", style:{"line-color":"#dcdcd6"}},
+  {selector:"edge.formula, edge.escribe, edge.fuente_de, edge.sostiene, edge.usa_modelo, edge.aplica, edge.sobre",
+    style:{"line-color":"#c4c4bd", "target-arrow-shape":"triangle", "target-arrow-color":"#c4c4bd"}},
+  {selector:"edge.pertenece_a, edge.indexado_en", style:{"display":"none"}},
+  {selector:"edge.contraconcepto_de", style:{"line-style":"dashed", "line-color":COLOR.antagonismo, "width":1.4}},
+  {selector:"edge.vecino_de", style:{"line-style":"dashed", "line-color":"#a8a8a1", "width":1.2}},
+  {selector:"edge.antagonismo", style:{"line-color":COLOR.antagonismo, "width":2.6}},
+  {selector:"edge.resonancia", style:{"line-color":COLOR.resonancia, "width":2.6}},
+  {selector:"edge.filiacion", style:{"line-color":COLOR.filiacion, "width":2.2, "target-arrow-shape":"triangle", "target-arrow-color":COLOR.filiacion}},
+  {selector:"edge.variacion", style:{"line-color":COLOR.variacion, "width":2.4, "target-arrow-shape":"triangle", "target-arrow-color":COLOR.variacion}},
+  {selector:"edge.recepcion", style:{"line-color":COLOR.recepcion, "width":2.4, "target-arrow-shape":"triangle", "target-arrow-color":COLOR.recepcion}},
+  {selector:"edge:selected", style:{"width":4, "label":"data(rotulo)", "font-family":"Fira Code, monospace", "font-size":10.5, "color":COLOR.tinta,
+    "text-background-color":"#ffffff", "text-background-opacity":1, "text-background-padding":3, "text-rotation":"autorotate"}},
+
+  {selector:".oculto", style:{"display":"none"}},
+  {selector:".atenuado", style:{"opacity":0.14}},
+  {selector:".eje-fuera", style:{"opacity":0.25}}
+];
+
+/* ---------- visibilidad ---------- */
+function aplicarVisibilidad(){
+  const antes = new Set(cy.nodes().filter(n => !n.hasClass("oculto")).map(n => n.id()));
+  const vis = new Set();
+  const conceptosVisibles = new Set();
+  if (estado.foco === "todos") {
+    for (const n of G.nodos.values()) if (n.tipo === "concepto") conceptosVisibles.add(n.id);
+  } else {
+    conceptosVisibles.add(estado.foco);
+    for (const a of [...idx.salen(estado.foco), ...idx.entran(estado.foco)])
+      if (a.tipo === "contraconcepto_de" || a.tipo === "vecino_de") conceptosVisibles.add(a.origen === estado.foco ? a.destino : a.origen);
+  }
+  for (const c of conceptosVisibles) {
+    const n = idx.nodo(c);
+    if (estado.vista === "tiempo") break;
+    if (n && (n.estado !== "pendiente" || estado.pendientes || c === estado.foco)) vis.add(c);
+  }
+  const defs = [];
+  for (const n of G.nodos.values()) {
+    if (n.tipo !== "definicion") continue;
+    const conceptos = idx.salen(n.id,"define").map(a => a.destino);
+    if (estado.foco === "todos" || conceptos.includes(estado.foco) || !conceptos.length) { vis.add(n.id); defs.push(n.id); }
+  }
+  if (estado.vista === "red" || estado.expandido) {
+    const fuente = estado.todo && estado.vista === "red" ? defs : (estado.expandido ? [estado.expandido] : []);
+    for (const d of fuente) for (const f of idx.fuentesDe(d)) vis.add(f);
+  }
+  cy.batch(() => {
+    cy.nodes().forEach(n => {
+      if (n.hasClass("marca")) return;
+      const tipo = n.data("tipo");
+      if (tipo === "enfoque") return;
+      n.toggleClass("oculto", !vis.has(n.id()));
+    });
+    cy.nodes(".enfoque").forEach(n => {
+      const visibleHijo = n.children().some(h => !h.hasClass("oculto"));
+      n.toggleClass("oculto", !visibleHijo);
+    });
+    cy.edges().forEach(e => {
+      const t = e.data("tipo");
+      let ocultar = false;
+      if (INTERPRETATIVAS.includes(t)) ocultar = !estado.rels.has(t);
+      else if (t === "contraconcepto_de" || t === "vecino_de") ocultar = !estado.rels.has("conceptos");
+      else if (t === "define") ocultar = !estado.define || estado.vista === "tiempo";
+      e.toggleClass("oculto", ocultar);
+      const fueraEje = estado.eje !== "todos" && INTERPRETATIVAS.includes(t) && e.data("eje") !== estado.eje;
+      e.toggleClass("eje-fuera", fueraEje);
+    });
+  });
+  const nuevos = cy.nodes().filter(n => !n.hasClass("oculto") && !antes.has(n.id()) && !n.hasClass("enfoque") && !n.hasClass("marca"));
+  return nuevos;
+}
+
+/* ---------- disposiciones ---------- */
+function visibles(){
+  const nodos = cy.nodes().filter(n => !n.hasClass("oculto") && !n.hasClass("marca"));
+  const ids = new Set(nodos.map(n => n.id()));
+  const aristas = cy.edges().filter(e => !e.hasClass("oculto") && e.style("display") !== "none" && ids.has(e.source().id()) && ids.has(e.target().id()));
+  return nodos.union(aristas);
+}
+
+function disponer(animar = true){
+  cy.nodes(".marca").remove();
+  if (estado.vista === "tiempo") return disponerTiempo(animar);
+  const eles = visibles();
+  const usarFcose = typeof cytoscapeFcose !== "undefined";
+  const opciones = usarFcose
+    ? {name:"fcose", quality:"proof", randomize:true, animate:animar, animationDuration:500, fit:true, padding:50,
+       nodeRepulsion:() => estado.todo ? 14000 : 9000, idealEdgeLength:e => INTERPRETATIVAS.includes(e.data("tipo")) ? 200 : (estado.todo ? 130 : 110),
+       edgeElasticity:() => 0.3, nestingFactor:0.5, gravity:0.2, gravityCompound:1.2, packComponents:true, nodeSeparation:90}
+    : {name:"cose", animate:animar, fit:true, padding:50, nodeRepulsion:() => 12000, idealEdgeLength:() => 140, nestingFactor:1.1};
+  eles.layout(opciones).run();
+}
+
+function disponerTiempo(animar){
+  const defs = cy.nodes(".definicion").filter(n => !n.hasClass("oculto"));
+  const anios = defs.map(n => idx.anioDe(n.id())).filter(Boolean);
+  if (!anios.length) { estado.vista = "red"; marcarVista(); return disponer(animar); }
+  const min = Math.min(...anios), max = Math.max(...anios), rango = Math.max(max - min, 10);
+  const escala = Math.max(5, Math.min(22, 1100 / rango));
+  const x = a => (a - min) * escala;
+  const carriles = new Map();
+  defs.forEach(n => { const p = n.parent().length ? n.parent().id() : "_sin"; if (!carriles.has(p)) carriles.set(p, []); carriles.get(p).push(n); });
+  const orden = [...carriles.entries()].sort((a, b) => Math.min(...a[1].map(n => idx.anioDe(n.id()) || 9999)) - Math.min(...b[1].map(n => idx.anioDe(n.id()) || 9999)));
+  const pos = {};
+  let y = 0;
+  for (const [, nodos] of orden) {
+    nodos.sort((a, b) => (idx.anioDe(a.id()) || 0) - (idx.anioDe(b.id()) || 0));
+    let ultimo = -Infinity, alterno = 0;
+    for (const n of nodos) {
+      const px = x(idx.anioDe(n.id()) || min);
+      let dy = 0;
+      if (px - ultimo < 120) { alterno++; dy = (alterno % 2 ? 46 : -46); } else alterno = 0;
+      pos[n.id()] = {x:px, y:y + dy};
+      ultimo = px;
+    }
+    y += 190;
+  }
+  const conceptos = cy.nodes(".concepto").filter(n => !n.hasClass("oculto"));
+  conceptos.forEach((n, i) => { pos[n.id()] = {x:-260, y:i * 70}; });
+  const paso = rango > 120 ? 25 : rango > 50 ? 10 : 5;
+  const marcas = [];
+  for (let a = Math.ceil(min / paso) * paso; a <= max; a += paso) marcas.push({group:"nodes", data:{id:"marca-" + a, label:String(a), tipo:"marca"}, classes:"marca"});
+  cy.add(marcas);
+  cy.nodes(".marca").forEach(n => { pos[n.id()] = {x:x(+n.data("label")), y:y + 10}; });
+  const otros = cy.nodes().filter(n => !n.hasClass("oculto") && !pos[n.id()] && !n.isParent());
+  const eles = visibles().union(cy.nodes(".marca"));
+  eles.layout({name:"preset", positions:n => pos[n.id()] || n.position(), animate:animar, animationDuration:500, fit:true, padding:60}).run();
+  if (estado.expandido) setTimeout(() => colocarAlrededor(cy.getElementById(estado.expandido), otros), animar ? 520 : 0);
+}
+
+function colocarAlrededor(centro, nodos){
+  if (!centro || !centro.length || !nodos.length) return;
+  const c = centro.position();
+  const r = 150 + nodos.length * 6;
+  nodos.forEach((n, i) => {
+    const ang = -Math.PI / 2 + (2 * Math.PI * i) / nodos.length;
+    n.position({x:c.x + r * Math.cos(ang), y:c.y + r * Math.sin(ang)});
+  });
+}
+
+/* ---------- selección y resaltado ---------- */
+function resaltar(ele){
+  cy.elements().removeClass("atenuado");
+  if (!ele) return;
+  let foco = ele.isNode() ? ele.closedNeighborhood() : ele.union(ele.connectedNodes());
+  foco = foco.union(foco.parents());
+  cy.elements().not(foco).filter(e => !e.hasClass("oculto") && !e.hasClass("marca") && !(e.isNode() && e.isParent())).addClass("atenuado");
+}
+
+function seleccionar(id){
+  const n = idx.nodo(id);
+  if (!n) return;
+  if (n.tipo === "definicion") {
+    if (estado.expandido !== id) expandir(id);
+  } else if (["autor","obra","cita","metafora","lectura_caso","caso"].includes(n.tipo)) {
+    const def = buscarDefDe(id);
+    if (def && cy.getElementById(id).hasClass("oculto")) expandir(def);
+  } else if (n.tipo === "concepto" && n.estado === "pendiente" && !estado.pendientes) {
+    estado.pendientes = true; $("#f-pendientes").checked = true; aplicarVisibilidad();
+  }
+  const ele = cy.getElementById(id);
+  cy.elements().unselect(); ele.select();
+  estado.seleccion = id;
+  resaltar(ele);
+  mostrarPanel(fichaNodo(n));
+  if (!ele.hasClass("oculto")) setTimeout(() => encuadrar(ele), n.tipo === "definicion" ? 450 : 60);
+  escribirHash();
+}
+
+function encuadrar(ele){
+  cy.resize();
+  let foco = ele.closedNeighborhood().filter(e => !e.hasClass("oculto"));
+  foco = foco.union(foco.parents());
+  cy.animate({fit:{eles:foco, padding:70}, duration:400});
+}
+
+function buscarDefDe(id){
+  const n = idx.nodo(id);
+  if (n.tipo === "autor") return (idx.salen(id,"formula")[0] || {}).destino;
+  if (n.tipo === "obra") return (idx.salen(id,"fuente_de").find(a => idx.nodo(a.destino)?.tipo === "definicion") || {}).destino;
+  if (n.tipo === "cita") return (idx.salen(id,"sostiene")[0] || {}).destino;
+  if (n.tipo === "metafora") return (idx.entran(id,"usa_modelo")[0] || {}).origen;
+  if (n.tipo === "lectura_caso") return (idx.entran(id,"aplica")[0] || {}).origen;
+  if (n.tipo === "caso") { const l = (idx.entran(id,"sobre")[0] || {}).origen; return l && (idx.entran(l,"aplica")[0] || {}).origen; }
+}
+
+function expandir(def){
+  estado.expandido = def;
+  const nuevos = aplicarVisibilidad();
+  if (estado.todo && estado.vista === "red") return;
+  colocarAlrededor(cy.getElementById(def), nuevos);
+  if (!nuevos.length || typeof cytoscapeFcose === "undefined") return;
+  const nuevosIds = new Set(nuevos.map(n => n.id()));
+  const fijos = visibles().nodes().filter(n => !n.isParent() && !nuevosIds.has(n.id()))
+    .map(n => ({nodeId:n.id(), position:{...n.position()}}));
+  visibles().layout({name:"fcose", quality:"proof", randomize:false, animate:true, animationDuration:400, fit:false,
+    fixedNodeConstraint:fijos, nodeRepulsion:() => 16000, idealEdgeLength:() => 160, nodeSeparation:100}).run();
+}
+
+function seleccionarArista(edge){
+  const a = G.aristas.find(x => claveArista(x) === edge.data("clave"));
+  cy.elements().unselect(); edge.select();
+  estado.seleccion = null;
+  resaltar(edge);
+  mostrarPanel(fichaArista(a));
+}
+
+function limpiar(){
+  estado.seleccion = null; estado.expandido = null;
+  cy.elements().unselect(); resaltar(null);
+  aplicarVisibilidad();
+  cerrarPanel(); escribirHash();
+}
+
+/* ---------- panel ---------- */
+function mostrarPanel(html){
+  const p = $("#panel");
+  p.innerHTML = `<button class="cerrar" aria-label="Cerrar ficha">Cerrar</button>` + html;
+  p.classList.add("abierto"); p.scrollTop = 0;
+  p.querySelector(".cerrar").onclick = limpiar;
+  p.querySelectorAll("[data-id]").forEach(b => b.onclick = () => seleccionar(b.dataset.id));
+  p.querySelectorAll("[data-copiar]").forEach(b => b.onclick = () => { navigator.clipboard?.writeText(location.href); b.textContent = "Enlace copiado"; });
+  setTimeout(() => cy.resize(), 0);
+}
+function cerrarPanel(){ $("#panel").classList.remove("abierto"); setTimeout(() => cy.resize(), 0); }
+
+const enlace = (id, clase = "") => { const n = idx.nodo(id); return n ? `<button class="enlace ${clase}" data-id="${esc(id)}">${esc(n.tipo === "definicion" ? nombreDef(id) : n.etiqueta || id)}</button>` : esc(id); };
+const parrafos = t => String(t).split(/\n{2,}/).map(p => `<p>${conMarcas(p)}</p>`).join("");
+const lista = arr => `<ul>${arr.map(x => `<li>${conMarcas(typeof x === "string" ? x : JSON.stringify(x))}</li>`).join("")}</ul>`;
+function insigniaVerif(v){
+  if (!v) return "";
+  const ok = /^verificad/i.test(v) && !/parcial|revisar/i.test(v);
+  return `<span class="insignia ${ok ? "ok" : "dudosa"}">${esc(v)}</span>`;
+}
+function otrosCampos(n, usados){
+  const fuera = new Set(["id","tipo","etiqueta","estado","_fuentes", ...usados]);
+  const resto = Object.entries(n).filter(([k, v]) => !fuera.has(k) && v !== null && v !== "" && !(Array.isArray(v) && !v.length));
+  return resto.map(([k, v]) => `<h4>${esc(rotuloCampo(k))}</h4>` +
+    (Array.isArray(v) ? lista(v) : typeof v === "object" ? `<p class="chica">${esc(JSON.stringify(v))}</p>` : parrafos(v))).join("");
+}
+const pie = n => `<p class="chica" style="margin-top:24px">Aparece en: ${esc((n._fuentes || []).join(", ") || "sin registro")}<br>${esc(n.id)}</p>
+  <div class="acciones"><button data-copiar>Copiar enlace</button></div>`;
+
+function bloqueCita(c){
+  return `<div class="cita"><blockquote>${conMarcas(c.original || "")}</blockquote>
+    ${c.traduccion ? `<p>${conMarcas(c.traduccion)}</p>` : ""}
+    <p class="chica">${conMarcas([c.pagina, c.traduccion_fuente].filter(Boolean).join(". "))}</p>${insigniaVerif(c.verificacion)}</div>`;
+}
+function bloqueObra(o){
+  return `<p>${enlace(o.id)}${o.titulo_original && o.titulo_original !== o.etiqueta ? ` <span class="meta">(${esc(o.titulo_original)}, ${esc(o.anio_original ?? "")})</span>` : o.anio_original ? ` <span class="meta">(${esc(o.anio_original)})</span>` : ""}</p>
+    ${o.apa ? `<p class="chica">${conMarcas(o.apa)}</p>` : ""}${o.apa_traduccion ? `<p class="chica">${conMarcas(o.apa_traduccion)}</p>` : ""}`;
+}
+function bloqueRelacion(a, desde){
+  const otro = a.origen === desde ? a.destino : a.origen;
+  const eje = a.eje && G.ejes.get(a.eje);
+  const color = COLOR[a.tipo] || COLOR.gris;
+  return `<div class="rel"><p><span class="tipo-rel" style="color:${color}">${esc(NOMBRE_REL[a.tipo] || a.tipo)}</span> con ${enlace(otro)}</p>
+    ${eje ? `<p class="chica">Eje: ${esc((eje.polos || []).join(" / ") || a.eje)}</p>` : ""}
+    ${a.formulacion ? parrafos(a.formulacion) : ""}
+    ${a.divergencia ? `<p><em>Divergencia:</em> ${conMarcas(a.divergencia)}</p>` : ""}
+    ${a.confianza ? `<p class="chica">Confianza ${esc(a.confianza)}</p>` : ""}</div>`;
+}
+
+function fichaNodo(n){
+  const t = n.tipo;
+  let h = `<p class="clase">${esc(NOMBRE_TIPO[t] || t)}${n.estado ? `, ${esc(n.estado)}` : ""}</p><h2>${esc(t === "metafora" ? rotuloNodo(n) : n.etiqueta || n.id)}</h2>`;
+  let usados = [];
+  if (t === "definicion") {
+    const autor = idx.autorDe(n.id), enf = autor && idx.enfoqueDe(autor);
+    h += `<p class="meta">${autor ? enlace(autor, "autor") : ""}${enf ? `<br>${enlace(enf)}` : ""}${n.periodo ? `<br>${esc(n.periodo)}` : ""}</p>`;
+    h += `<p>${n.estatus ? `<span class="insignia">${esc(n.estatus)}</span>` : ""}${insigniaVerif(n.verificacion)}</p>`;
+    if (n.texto) h += parrafos(n.texto);
+    if (n.premisas?.length) h += `<h4>Premisas</h4>` + lista(n.premisas);
+    if (n.atributos?.length) h += `<h4>Atributos</h4>` + lista(n.atributos);
+    if (n.implicancias) h += `<h4>Implicancias</h4>` + parrafos(n.implicancias);
+    if (n.enfoque_y_contexto) h += `<h4>Enfoque y contexto</h4>` + parrafos(n.enfoque_y_contexto);
+    const lecturas = idx.salen(n.id,"aplica").map(a => idx.nodo(a.destino)).filter(Boolean);
+    if (lecturas.length) h += `<h4>Lectura del caso</h4>` + lecturas.map(l => parrafos(l.texto || l.etiqueta)).join("");
+    const citas = idx.entran(n.id,"sostiene").map(a => idx.nodo(a.origen)).filter(Boolean);
+    if (citas.length) h += `<h4>Citas</h4>` + citas.map(bloqueCita).join("");
+    const obras = idx.entran(n.id,"fuente_de").map(a => idx.nodo(a.origen)).filter(o => o && o.tipo === "obra");
+    if (obras.length) h += `<h4>Obras</h4>` + obras.map(bloqueObra).join("");
+    const mets = idx.salen(n.id,"usa_modelo").map(a => a.destino);
+    if (mets.length) h += `<h4>Metáforas y modelos</h4><p>${mets.map(m => enlace(m)).join(", ")}</p>`;
+    const rels = G.aristas.filter(a => INTERPRETATIVAS.includes(a.tipo) && (a.origen === n.id || a.destino === n.id));
+    if (rels.length) h += `<h4>Relaciones</h4>` + rels.map(a => bloqueRelacion(a, n.id)).join("");
+    const conc = G.aristas.filter(a => (a.tipo === "contraconcepto_de" || a.tipo === "vecino_de") && a.segun === n.id);
+    if (conc.length) h += `<h4>Conceptos asociados en esta definición</h4><ul>${conc.map(a => `<li>${enlace(a.origen)}: ${esc(NOMBRE_REL[a.tipo].toLowerCase())} de ${enlace(a.destino)}</li>`).join("")}</ul>`;
+    usados = ["texto","premisas","atributos","implicancias","enfoque_y_contexto","estatus","verificacion","periodo"];
+  } else if (t === "autor") {
+    const enfs = idx.salen(n.id,"pertenece_a").map(a => a.destino);
+    h += `<p class="meta">${n.nacimiento ? `${esc(n.nacimiento)}–${esc(n.muerte ?? "")}` : ""}${enfs.length ? `<br>${enfs.map(e => enlace(e)).join(", ")}` : ""}</p>`;
+    const defs = idx.salen(n.id,"formula").map(a => a.destino);
+    if (defs.length) h += `<h4>Definiciones</h4><ul>${defs.map(d => `<li>${enlace(d)}: ${esc(idx.nodo(d)?.etiqueta || "")}</li>`).join("")}</ul>`;
+    const obras = idx.salen(n.id,"escribe").map(a => idx.nodo(a.destino)).filter(Boolean);
+    if (obras.length) h += `<h4>Obras</h4>` + obras.map(bloqueObra).join("");
+    usados = ["nacimiento","muerte"];
+  } else if (t === "concepto") {
+    const defs = idx.defsDeConcepto(n.id);
+    if (defs.length) h += `<h4>Definiciones</h4><ul>${defs.map(d => `<li>${enlace(d)}: ${esc(idx.nodo(d)?.etiqueta || "")}</li>`).join("")}</ul>`;
+    const rels = G.aristas.filter(a => (a.tipo === "contraconcepto_de" || a.tipo === "vecino_de") && (a.origen === n.id || a.destino === n.id));
+    if (rels.length) h += `<h4>Relaciones con otros conceptos</h4><ul>${rels.map(a => {
+      const otro = a.origen === n.id ? a.destino : a.origen;
+      const quien = a.segun ? ` según ${enlace(a.segun)}` : "";
+      return `<li>${esc(NOMBRE_REL[a.tipo])}: ${enlace(otro)}${quien}</li>`; }).join("")}</ul>`;
+  } else if (t === "enfoque") {
+    h += `<p class="meta">${[n.periodo, n.rango].filter(Boolean).map(esc).join("<br>")}</p>`;
+    if (n.texto) h += parrafos(n.texto);
+    const autores = idx.entran(n.id,"pertenece_a").map(a => a.origen);
+    if (autores.length) h += `<h4>Autores</h4><p>${autores.map(a => enlace(a, "autor")).join(", ")}</p>`;
+    usados = ["periodo","rango","texto"];
+  } else if (t === "obra") {
+    h = h.replace(/<h2>.*<\/h2>/, `<h2>${esc(n.etiqueta)}</h2>`);
+    h += `<p class="meta">${[n.titulo_original, n.anio_original].filter(Boolean).map(esc).join(", ")}</p>`;
+    if (n.apa) h += `<h4>Referencia</h4><p class="chica">${conMarcas(n.apa)}</p>`;
+    if (n.apa_traduccion) h += `<h4>Traducción</h4><p class="chica">${conMarcas(n.apa_traduccion)}</p>`;
+    const autores = idx.entran(n.id,"escribe").map(a => a.origen);
+    if (autores.length) h += `<h4>Autor</h4><p>${autores.map(a => enlace(a, "autor")).join(", ")}</p>`;
+    const sale = idx.salen(n.id,"fuente_de").map(a => idx.nodo(a.destino)).filter(Boolean);
+    const defs = sale.filter(x => x.tipo === "definicion"), citas = sale.filter(x => x.tipo === "cita");
+    if (defs.length) h += `<h4>Fuente de</h4><p>${defs.map(d => enlace(d.id)).join(", ")}</p>`;
+    if (citas.length) h += `<h4>Citas</h4>` + citas.map(bloqueCita).join("");
+    usados = ["titulo_original","anio_original","apa","apa_traduccion"];
+  } else if (t === "cita") {
+    h = `<p class="clase">Cita</p>` + bloqueCita(n);
+    const obra = (idx.entran(n.id,"fuente_de")[0] || {}).origen, def = (idx.salen(n.id,"sostiene")[0] || {}).destino;
+    h += `<p class="meta">${obra ? enlace(obra) : ""}${def ? `<br>sostiene ${enlace(def)}` : ""}</p>`;
+    usados = ["original","traduccion","pagina","traduccion_fuente","verificacion"];
+  } else {
+    const rel = [...idx.salen(n.id), ...idx.entran(n.id)];
+    if (rel.length) h += `<h4>Conexiones</h4><ul>${rel.map(a => `<li>${esc(a.tipo.replace(/_/g," "))}: ${enlace(a.origen === n.id ? a.destino : a.origen)}</li>`).join("")}</ul>`;
+  }
+  return h + otrosCampos(n, usados) + pie(n);
+}
+
+function fichaArista(a){
+  const eje = a.eje && G.ejes.get(a.eje);
+  let h = `<p class="clase">Relación</p><h2 style="color:${COLOR[a.tipo] || COLOR.tinta}">${esc(NOMBRE_REL[a.tipo] || a.tipo.replace(/_/g," "))}</h2>
+    <p class="meta">${enlace(a.origen)} y ${enlace(a.destino)}</p>`;
+  if (eje) h += `<h4>Eje</h4><p>${esc((eje.polos || []).join(" / "))}</p>${eje.descripcion ? `<p class="meta">${esc(eje.descripcion)}</p>` : ""}`;
+  if (a.formulacion) h += `<h4>Formulación</h4>` + parrafos(a.formulacion);
+  if (a.divergencia) h += `<h4>Divergencia</h4>` + parrafos(a.divergencia);
+  if (a.segun) h += `<h4>Según</h4><p>${enlace(a.segun)}</p>`;
+  if (a.confianza) h += `<p class="chica">Confianza ${esc(a.confianza)}</p>`;
+  return h + `<p class="chica" style="margin-top:24px">Aparece en: ${esc((a._fuentes || []).join(", "))}</p>`;
+}
+
+function fichaAvisos(){
+  const av = G.advertencias;
+  let h = `<p class="clase">Estado del grafo</p><h2>${av.length ? `${av.length} advertencia${av.length > 1 ? "s" : ""}` : "Sin advertencias"}</h2>`;
+  h += `<p class="meta">${G.archivos.length} archivo${G.archivos.length === 1 ? "" : "s"}, ${G.nodos.size} nodos, ${G.aristas.length} aristas${G.generado ? `<br>Generado ${esc(G.generado)}` : ""}</p>`;
+  if (av.length) h += av.map(a => `<div class="rel"><p><span class="tipo-rel" style="color:${a.nivel === "error" ? COLOR.antagonismo : COLOR.variacion}">${esc(a.tipo)}</span></p>
+     <p>${esc(a.mensaje)}</p><p class="chica">${a.id && G.nodos.has(a.id) ? enlace(a.id) : esc(a.id || "")}${a.archivo ? `<br>${esc(a.archivo)}` : ""}</p></div>`).join("");
+  h += `<h4>Archivos</h4><ul>${G.archivos.map(f => `<li class="chica">${esc(f.nombre)}: ${f.nodos} nodos, ${f.aristas} aristas</li>`).join("")}</ul>`;
+  return h;
+}
+
+/* ---------- controles ---------- */
+function construirControles(){
+  const conceptos = [...G.nodos.values()].filter(n => n.tipo === "concepto" && idx.defsDeConcepto(n.id).length)
+    .sort((a, b) => normal(a.etiqueta).localeCompare(normal(b.etiqueta)));
+  const sel = $("#concepto");
+  sel.innerHTML = conceptos.map(c => `<option value="${esc(c.id)}">${esc(c.etiqueta)}</option>`).join("") +
+    (conceptos.length > 1 ? `<option value="todos">Todos los conceptos</option>` : "");
+  if (!conceptos.some(c => c.id === estado.foco)) estado.foco = conceptos.length === 1 ? conceptos[0].id : (conceptos.length ? "todos" : "todos");
+  sel.value = estado.foco;
+  document.title = "Glosario: " + (sel.selectedOptions[0]?.textContent || "");
+
+  const presentes = new Set(G.aristas.map(a => a.tipo));
+  const rels = [...INTERPRETATIVAS.filter(t => presentes.has(t)), "conceptos"];
+  $("#f-relaciones").innerHTML = rels.map(t => {
+    const muestra = t === "conceptos"
+      ? `<span class="muestra punteada" style="color:${COLOR.grisClaro}"></span>`
+      : `<span class="muestra" style="background:${COLOR[t]}"></span>`;
+    return `<label><input type="checkbox" data-rel="${t}" ${estado.rels.has(t) ? "checked" : ""}> ${muestra} ${t === "conceptos" ? "Contraconceptos y vecinos" : NOMBRE_REL[t]}</label>`;
+  }).join("");
+  $("#f-relaciones").querySelectorAll("input").forEach(i => i.onchange = () => {
+    i.checked ? estado.rels.add(i.dataset.rel) : estado.rels.delete(i.dataset.rel); aplicarVisibilidad(); });
+
+  const ejes = [...G.ejes.values()];
+  $("#f-eje").innerHTML = `<option value="todos">Todos los ejes</option>` + ejes.map(e => `<option value="${esc(e.id)}">${esc((e.polos || []).join(" / ") || e.id)}</option>`).join("");
+  $("#f-eje").value = G.ejes.has(estado.eje) ? estado.eje : "todos";
+
+  const items = [
+    ["punto", COLOR.def, "Definición (rótulo: autor)"], ["punto", COLOR.autor, "Autor"],
+    ["cuadro", COLOR.tinta, "Obra"], ["punto", "#b5b5ae", "Metáfora o modelo"],
+    ...INTERPRETATIVAS.filter(t => presentes.has(t)).map(t => ["linea", COLOR[t], NOMBRE_REL[t]]),
+    ["punteada", COLOR.antagonismo, "Contraconcepto"], ["punteada", "#a8a8a1", "Concepto vecino"]
+  ];
+  $("#leyenda").innerHTML = items.map(([forma, c, txt]) => {
+    const m = forma === "punto" ? `<span class="punto" style="background:${c}"></span>`
+      : forma === "cuadro" ? `<span class="punto" style="background:${c};border-radius:1px"></span>`
+      : forma === "linea" ? `<span class="muestra" style="background:${c}"></span>`
+      : `<span class="muestra punteada" style="color:${c}"></span>`;
+    return `<div>${m}${esc(txt)}</div>`;
+  }).join("");
+
+  const n = G.advertencias.length, errores = G.advertencias.filter(a => a.nivel === "error").length;
+  const b = $("#btn-avisos");
+  b.textContent = n ? `${n} advertencia${n > 1 ? "s" : ""}` : "Sin advertencias";
+  b.classList.toggle("alerta", !!errores || !!n);
+  $("#resumen").textContent = `${G.archivos.length} archivo${G.archivos.length === 1 ? "" : "s"}, ${G.nodos.size} nodos`;
+}
+
+function marcarVista(){
+  $("#vista-red").setAttribute("aria-pressed", estado.vista === "red");
+  $("#vista-tiempo").setAttribute("aria-pressed", estado.vista === "tiempo");
+}
+
+function enlazarControles(){
+  $("#concepto").onchange = e => { estado.foco = e.target.value; estado.expandido = null; aplicarVisibilidad(); disponer(); cerrarPanel(); escribirHash();
+    document.title = "Glosario: " + e.target.selectedOptions[0].textContent; };
+  $("#vista-red").onclick = () => { if (estado.vista === "red") return; estado.vista = "red"; marcarVista(); aplicarVisibilidad(); disponer(); escribirHash(); };
+  $("#vista-tiempo").onclick = () => { if (estado.vista === "tiempo") return; estado.vista = "tiempo"; marcarVista(); aplicarVisibilidad(); disponer(); escribirHash(); };
+  $("#btn-filtros").onclick = e => { const f = $("#filtros"); f.classList.toggle("abierto"); e.target.setAttribute("aria-expanded", f.classList.contains("abierto")); };
+  $("#btn-todo").onclick = e => { estado.todo = !estado.todo; e.target.setAttribute("aria-pressed", estado.todo); aplicarVisibilidad(); disponer(); };
+  $("#f-eje").onchange = e => { estado.eje = e.target.value; aplicarVisibilidad(); };
+  $("#f-pendientes").onchange = e => { estado.pendientes = e.target.checked; aplicarVisibilidad(); };
+  $("#f-define").onchange = e => { estado.define = e.target.checked; aplicarVisibilidad(); };
+  $("#btn-avisos").onclick = () => { cy.elements().unselect(); resaltar(null); mostrarPanel(fichaAvisos()); };
+  $("#btn-leyenda").onclick = () => $("#leyenda").classList.toggle("abierto");
+  $("#btn-png").onclick = () => {
+    const blob = cy.png({output:"blob", bg:"#ffffff", full:true, scale:2, maxWidth:6000});
+    const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+    a.download = `glosario-${(estado.foco || "todos").replace(/[^a-z0-9]+/gi,"-")}-${estado.vista}.png`; a.click();
+  };
+  const abrir = () => $("#archivos").click();
+  $("#btn-abrir").onclick = abrir; $("#btn-abrir-vacio").onclick = abrir;
+  $("#archivos").onchange = async e => {
+    const fuentes = G ? [{nombre:"grafo actual", datos:exportarActual()}] : [];
+    for (const f of e.target.files) {
+      try { fuentes.push({nombre:f.name, datos:JSON.parse(await f.text())}); }
+      catch (err) { fuentes.push({nombre:f.name, datos:null}); }
+    }
+    e.target.value = "";
+    iniciar(fusionar(fuentes));
+  };
+
+  const buscar = $("#buscar"), res = $("#resultados");
+  let activos = [], cursor = -1;
+  const pintar = () => {
+    res.innerHTML = activos.map((n, i) => `<button role="option" data-id="${esc(n.id)}" class="${i === cursor ? "activo" : ""}">${esc(n.tipo === "definicion" ? nombreDef(n.id) : n.etiqueta || n.id)}<small>${esc(NOMBRE_TIPO[n.tipo] || n.tipo)}</small></button>`).join("");
+    res.style.display = activos.length ? "block" : "none";
+    res.querySelectorAll("button").forEach(b => b.onmousedown = ev => { ev.preventDefault(); elegir(b.dataset.id); });
+  };
+  const elegir = id => { res.style.display = "none"; buscar.value = ""; buscar.blur(); seleccionar(id); };
+  buscar.oninput = () => {
+    const q = normal(buscar.value.trim());
+    cursor = -1;
+    if (q.length < 2) { activos = []; return pintar(); }
+    activos = [...G.nodos.values()].filter(n => normal([n.etiqueta, n.titulo_original, n.tipo === "definicion" ? nombreDef(n.id) : ""].join(" ")).includes(q)).slice(0, 10);
+    pintar();
+  };
+  buscar.onkeydown = e => {
+    if (e.key === "ArrowDown") { cursor = Math.min(cursor + 1, activos.length - 1); pintar(); e.preventDefault(); }
+    else if (e.key === "ArrowUp") { cursor = Math.max(cursor - 1, 0); pintar(); e.preventDefault(); }
+    else if (e.key === "Enter" && activos.length) elegir(activos[Math.max(cursor, 0)].id);
+    else if (e.key === "Escape") { res.style.display = "none"; }
+  };
+  buscar.onblur = () => setTimeout(() => res.style.display = "none", 150);
+  document.addEventListener("keydown", e => { if (e.key === "Escape" && document.activeElement !== buscar) limpiar(); });
+}
+
+function exportarActual(){
+  return {archivos:G.archivos, advertencias:G.advertencias, ejes:[...G.ejes.values()], nodos:[...G.nodos.values()], aristas:G.aristas};
+}
+
+/* ---------- enlaces directos ---------- */
+function escribirHash(){
+  const p = new URLSearchParams();
+  if (estado.vista !== "red") p.set("vista", estado.vista);
+  if (estado.foco && estado.foco !== "todos") p.set("concepto", estado.foco);
+  if (estado.seleccion) p.set("nodo", estado.seleccion);
+  const h = p.toString();
+  history.replaceState(null, "", h ? "#" + h : location.pathname + location.search);
+}
+function leerHash(){
+  const p = new URLSearchParams(location.hash.slice(1));
+  if (p.get("vista") === "tiempo") estado.vista = "tiempo";
+  if (p.get("concepto")) estado.foco = p.get("concepto");
+  return p.get("nodo");
+}
+
+/* ---------- tooltip ---------- */
+function enlazarTooltip(){
+  const tip = $("#tip");
+  if (matchMedia("(hover: none)").matches) return;
+  cy.on("mouseover", "node.definicion, edge", e => {
+    const t = e.target;
+    const texto = t.isNode() ? t.data("etiqueta") : (INTERPRETATIVAS.includes(t.data("tipo")) || ["contraconcepto_de","vecino_de"].includes(t.data("tipo")) ? t.data("rotulo") : "");
+    if (!texto) return;
+    tip.textContent = texto; tip.style.display = "block";
+  });
+  cy.on("mousemove", e => { const o = e.originalEvent; tip.style.left = (o.clientX + 14) + "px"; tip.style.top = (o.clientY + 14) + "px"; });
+  cy.on("mouseout", "node, edge", () => tip.style.display = "none");
+}
+
+/* ---------- arranque ---------- */
+function iniciar(datos){
+  G = datos; idx = indexar();
+  $("#vacio").classList.toggle("visible", !G.nodos.size);
+  if (!G.nodos.size) return;
+  if (cy) cy.destroy();
+  cy = cytoscape({container:$("#cy"), elements:elementos(), style:ESTILO, minZoom:0.15, maxZoom:3,
+    boxSelectionEnabled:false, autoungrabify:false});
+  cy.on("tap", "node", e => { const n = e.target; if (n.hasClass("marca")) return; seleccionar(n.id()); });
+  cy.on("tap", "edge", e => seleccionarArista(e.target));
+  cy.on("tap", e => { if (e.target === cy) limpiar(); });
+  enlazarTooltip();
+  const nodo = leerHash();
+  construirControles(); marcarVista();
+  aplicarVisibilidad();
+  disponer(false);
+  if (nodo && G.nodos.has(nodo)) setTimeout(() => seleccionar(nodo), 50);
+  document.fonts?.ready.then(() => cy && cy.style().update());
+}
+
+async function cargar(){
+  enlazarControles();
+  let datos = null;
+  try {
+    const r = await fetch("grafo.json", {cache:"no-cache"});
+    if (r.ok) datos = await r.json();
+  } catch (e) { /* sin grafo.json: se intenta la API */ }
+  if (datos) { const g = fusionar([{nombre:"grafo.json", datos}]); g.generado = datos.generado; return iniciar(g); }
+  const m = location.hostname.match(/^([^.]+)\.github\.io$/i);
+  if (m) {
+    try {
+      const repo = location.pathname.split("/").filter(Boolean)[0] || `${m[1]}.github.io`;
+      const lista = await (await fetch(`https://api.github.com/repos/${m[1]}/${repo}/contents/nodos`)).json();
+      const archivos = (Array.isArray(lista) ? lista : []).filter(f => f.name.endsWith(".json"));
+      const fuentes = await Promise.all(archivos.map(async f => {
+        try { return {nombre:f.name, datos:await (await fetch(f.download_url)).json()}; } catch (e) { return {nombre:f.name, datos:null}; }
+      }));
+      if (fuentes.length) return iniciar(fusionar(fuentes));
+    } catch (e) { /* sin acceso a la API */ }
+  }
+  iniciar({nodos:new Map(), aristas:[], ejes:new Map(), archivos:[], advertencias:[]});
+}
+
+if (typeof cytoscape === "undefined") {
+  document.body.innerHTML = "<p style='padding:24px;font-family:Georgia,serif'>No se pudo cargar Cytoscape desde cdn.jsdelivr.net. Revisa la conexión o la carpeta lib/.</p>";
+} else {
+  if (typeof cytoscapeFcose !== "undefined") cytoscape.use(cytoscapeFcose);
+  cargar();
+}
+</script>
+</body>
+</html>

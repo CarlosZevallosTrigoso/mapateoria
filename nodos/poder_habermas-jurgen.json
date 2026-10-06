@@ -1,0 +1,288 @@
+{
+  "esquema": "glosario-grafo/1",
+  "exploracion": {
+    "id": "exp:poder",
+    "concepto": "concepto:poder",
+    "caso": null,
+    "fecha": "2026-10-05"
+  },
+  "ejes": [
+    {
+      "id": "eje:poder:imposicion-concertacion",
+      "concepto": "concepto:poder",
+      "polos": [
+        "imposición",
+        "concertación"
+      ],
+      "descripcion": "Si el poder se piensa como imposición de una voluntad sobre otra dentro de una relación social, o como capacidad que surge cuando varios actúan o deliberan en común."
+    },
+    {
+      "id": "eje:poder:generacion-uso",
+      "concepto": "concepto:poder",
+      "polos": [
+        "generación",
+        "uso"
+      ],
+      "descripcion": "Si la definición explica cómo se genera el poder (su origen en la acción o la comunicación) o cómo se adquiere y se emplea para fines (su uso estratégico o administrativo)."
+    }
+  ],
+  "nodos": [
+    {
+      "id": "concepto:poder",
+      "tipo": "concepto",
+      "etiqueta": "Poder",
+      "estado": "desarrollado"
+    },
+    {
+      "id": "concepto:violencia-estructural",
+      "tipo": "concepto",
+      "etiqueta": "Violencia estructural",
+      "estado": "pendiente"
+    },
+    {
+      "id": "enfoque:poder-como-accion-concertada",
+      "tipo": "enfoque",
+      "etiqueta": "Poder como acción concertada",
+      "periodo": "1958–",
+      "texto": "Arendt define el poder como la capacidad humana de actuar en concierto, que pertenece al grupo y se extingue cuando este se dispersa, y lo opone a la violencia. De aquí sale la distinción entre poder-para y poder-sobre, que estructura buena parte de la teoría política.",
+      "rango": "central",
+      "estado": "seleccionado"
+    },
+    {
+      "id": "autor:weber-max",
+      "tipo": "autor",
+      "etiqueta": "Max Weber",
+      "nacimiento": 1864,
+      "muerte": 1920,
+      "estado": "desarrollado"
+    },
+    {
+      "id": "autor:arendt-hannah",
+      "tipo": "autor",
+      "etiqueta": "Hannah Arendt",
+      "nacimiento": 1906,
+      "muerte": 1975,
+      "estado": "desarrollado"
+    },
+    {
+      "id": "autor:habermas-jurgen",
+      "tipo": "autor",
+      "etiqueta": "Jürgen Habermas",
+      "nacimiento": 1929,
+      "muerte": 2026,
+      "estado": "desarrollado"
+    },
+    {
+      "id": "obra:habermas-1976-hannah-arendts-begriff-der-macht",
+      "tipo": "obra",
+      "etiqueta": "El concepto de poder de Hannah Arendt",
+      "titulo_original": "Hannah Arendts Begriff der Macht",
+      "anio_original": 1976,
+      "apa": "Habermas, J. (1976). Hannah Arendts Begriff der Macht. Merkur, 30, 946–960. [REVISAR número y páginas]",
+      "apa_traduccion": "Habermas, J. (1977). Hannah Arendt's communications concept of power (T. McCarthy, Trad.). Social Research, 44(1), 3–24. [REVISAR]. Recogido en Habermas, J. (1983). Philosophical-political profiles (F. G. Lawrence, Trad.). MIT Press. Versión castellana en Perfiles filosófico-políticos (Taurus) [REVISAR edición, traductor y páginas]."
+    },
+    {
+      "id": "obra:habermas-1992-faktizitat-und-geltung",
+      "tipo": "obra",
+      "etiqueta": "Facticidad y validez",
+      "titulo_original": "Faktizität und Geltung",
+      "anio_original": 1992,
+      "apa": "Habermas, J. (1992). Faktizität und Geltung: Beiträge zur Diskurstheorie des Rechts und des demokratischen Rechtsstaats. Suhrkamp.",
+      "apa_traduccion": "Habermas, J. (1998). Facticidad y validez (M. Jiménez Redondo, Trad.). Trotta. (Obra original publicada en 1992)"
+    },
+    {
+      "id": "metafora:flujo",
+      "tipo": "metafora",
+      "etiqueta": "flujo de la esfera pública al Estado"
+    },
+    {
+      "id": "metafora:medio-de-direccion",
+      "tipo": "metafora",
+      "etiqueta": "medio de dirección (análogo al dinero)"
+    },
+    {
+      "id": "def:poder:weber-max",
+      "tipo": "definicion",
+      "etiqueta": "Poder como probabilidad de imponer la propia voluntad",
+      "texto": "Para Weber, el poder (Macht) es la probabilidad de que alguien imponga su voluntad dentro de una relación social, aun contra resistencia, sea cual sea el fundamento de esa probabilidad. La premisa es que el poder solo existe en relaciones entre conductas orientadas recíprocamente por un sentido, y su modelo es probabilístico: se expresa como Chance, una expectativa calculable de que una voluntad prevalezca. Sus atributos son la indiferencia respecto del recurso que lo sostiene (fuerza, dinero, cualidades personales, una constelación fortuita) y lo que Weber llama su carácter sociológicamente amorfo. Por eso lo acota en la dominación (Herrschaft), probabilidad de encontrar obediencia a un mandato, que supone un mínimo de voluntad de obedecer y que toda dominación procura asentar en la creencia en su legitimidad.",
+      "estatus": "formulada",
+      "premisas": [
+        "El poder solo existe en relaciones sociales entre conductas orientadas recíprocamente por un sentido.",
+        "Los conceptos sociológicos no deben cosificar colectivos; se reducen a probabilidades de acción social."
+      ],
+      "atributos": [
+        "probabilístico (Chance)",
+        "relacional",
+        "indiferente al fundamento o recurso",
+        "sociológicamente amorfo",
+        "se especifica en la dominación (Herrschaft)"
+      ],
+      "implicancias": "Esta definición vuelve el poder observable en interacciones concretas, porque obliga a identificar quién quiere qué, frente a quién y con qué probabilidad de prevalecer. Favorece preguntas sobre los fundamentos de esa probabilidad y, sobre todo, sobre el paso del poder a la dominación: cómo una imposición se estabiliza en obediencia y en qué creencia de legitimidad se apoya. Sus métodos naturales son la comprensión del sentido de la acción, los tipos ideales y la comparación histórica de formas de autoridad y administración. Deja en penumbra el poder que actúa antes de cualquier conflicto, moldeando deseos e intereses, y el que produce sujetos en lugar de imponerse a sujetos ya dados. Además exige una voluntad atribuible, de modo que los efectos impersonales de estructuras y objetos le resultan difíciles de captar.",
+      "enfoque_y_contexto": "Sociología comprensiva. Los «Conceptos sociológicos fundamentales» son de 1919–1920; Wirtschaft und Gesellschaft apareció póstumamente, editado por Marianne Weber. Responde a un problema metodológico: construir conceptos que no cosifiquen colectivos como el Estado o la nación. Valoración propia: toma distancia de la doctrina jurídica del Estado, que trataba el poder como facultad o derecho, y del lenguaje del Machtstaat guillermino. No hay contraconcepto explícito; la oposición interna es Macht/Herrschaft (amorfo/preciso, imposición/obediencia).",
+      "nota_vocabulario": "Herrschaft se traduce de modos divergentes (FCE: «dominación»; Parsons: «imperative control»; otras versiones: «authority», «domination»), y cada elección inclina la definición hacia la coerción o hacia la legitimidad.",
+      "periodo": "1919–1920 (publicación póstuma 1921–1922)",
+      "verificacion": "verificada"
+    },
+    {
+      "id": "def:poder:arendt-hannah",
+      "tipo": "definicion",
+      "etiqueta": "Poder como capacidad de actuar en concierto",
+      "texto": "Para Arendt, el poder es la capacidad humana de actuar en concierto. Es siempre propiedad de un grupo, nunca de un individuo, y existe mientras el grupo permanece unido; de quien está «en el poder» decimos en realidad que otros lo han facultado para actuar en su nombre. La premisa es la pluralidad: el poder surge entre las personas cuando hablan y actúan juntas, y desaparece cuando se dispersan. Su modelo es espacial y potencial, un «entre» que se actualiza en la acción y que no puede almacenarse como se almacenan los instrumentos. Sus atributos son el número, la legitimidad que deriva del acto inicial de reunirse y la independencia respecto de los medios materiales. Se define contra la violencia, que es instrumental, puede destruirlo y es incapaz de crearlo.",
+      "estatus": "formulada",
+      "premisas": [
+        "La pluralidad es la condición de la acción humana.",
+        "El poder surge entre las personas cuando hablan y actúan juntas y desaparece cuando se dispersan."
+      ],
+      "atributos": [
+        "colectivo (propiedad del grupo)",
+        "potencial, no almacenable",
+        "depende del número",
+        "legitimidad derivada del acto de reunirse",
+        "independiente de los instrumentos",
+        "opuesto a la violencia"
+      ],
+      "implicancias": "Esta definición permite ver poder donde hay acción colectiva sin aparato coercitivo: asambleas, consejos, movimientos, momentos constituyentes. Explica por qué regímenes armados se derrumban cuando se retira el apoyo, y separa con nitidez la capacidad de coerción de la capacidad de hacer cosas juntos. Favorece preguntas sobre cómo se forma, se sostiene y se pierde un poder común, y métodos como la narración histórico-política de revoluciones, el estudio de formas organizativas y la fenomenología del espacio público. Lo que deja fuera es considerable. La dominación cotidiana, la desigualdad estructural y la coerción en lo doméstico y lo laboral quedan del lado de la violencia o de lo prepolítico. Además la definición carga un juicio normativo positivo que dificulta analizar el poder concertado de grupos opresores.",
+      "enfoque_y_contexto": "Teoría política de la acción, de raíz republicana y fenomenológica (1958–1970). On Violence responde a la coyuntura de fines de los sesenta (Vietnam, revuelta estudiantil, Black Power, celebración de la violencia en parte de la Nueva Izquierda) y al consenso de izquierda a derecha según el cual la violencia es la manifestación más flagrante del poder; para documentarlo cita a C. Wright Mills, la definición weberiana del Estado y la definición de Macht del § 16. Contraconcepto explícito: violencia. Vocabulario de distinciones: poder, potencia, fuerza, autoridad, violencia; frente al modelo de mando y obediencia (dominio).",
+      "periodo": "1958–1970",
+      "verificacion": "parcial"
+    },
+    {
+      "id": "def:poder:habermas-jurgen",
+      "tipo": "definicion",
+      "etiqueta": "Poder comunicativo y poder administrativo",
+      "texto": "Habermas desdobla el concepto. El poder comunicativo es la capacidad que surge cuando los afectados forman, en una comunicación orientada al entendimiento y libre de coacción, una voluntad común; es su reformulación discursiva del poder arendtiano. Frente a él sitúa el poder que actores estratégicos adquieren y emplean para sus fines, y el poder administrativo, que funciona como medio de dirección del sistema estatal y coordina acciones sin pasar por el acuerdo, a la manera del dinero en la economía. El modelo es el de un flujo: el poder se genera en la esfera pública y el derecho lo traduce en decisiones administrativas. Sus atributos son la legitimidad derivada de razones aceptables, la dependencia de procedimientos y la vulnerabilidad ante formas de violencia estructural que bloquean la comunicación.",
+      "estatus": "formulada (poder comunicativo) y reconstruida (articulación con el poder administrativo)",
+      "premisas": [
+        "El fenómeno fundamental del poder es la formación de una voluntad común en una comunicación orientada al entendimiento.",
+        "El poder se genera comunicativamente, pero se adquiere y se emplea estratégicamente y circula como medio en el sistema administrativo."
+      ],
+      "atributos": [
+        "generado en la comunicación orientada al entendimiento",
+        "legitimidad derivada de razones aceptables",
+        "dependiente de procedimientos",
+        "traducido por el derecho en poder administrativo",
+        "vulnerable a la violencia estructural"
+      ],
+      "implicancias": "Usar esta definición convierte el poder en un problema de legitimidad medible por la calidad de la deliberación. Permite preguntar cómo se forma una voluntad común en la esfera pública, qué la distorsiona y si las decisiones administrativas la traducen o la eluden. Favorece métodos de reconstrucción normativa, estudios de deliberación, análisis de la esfera pública y de los medios, e investigación sobre procedimientos jurídicos y participativos. Su punto ciego es el poder que opera dentro de la comunicación misma: quién accede a la palabra, qué cuenta como argumento, qué exclusiones constituyen la esfera pública. Esa es la objeción que le harán Foucault, Fraser y Bourdieu. También privilegia lo lingüístico y deja en segundo plano los cuerpos, las imágenes y los objetos como vehículos de poder.",
+      "enfoque_y_contexto": "Teoría crítica de segunda generación: tránsito hacia la teoría de la acción comunicativa (1976) y teoría discursiva del derecho y la democracia (1992). Problema: la legitimidad del poder político en sociedades donde Estado y mercado se coordinan por medios que prescinden del acuerdo. En 1976 propone una división del trabajo (paráfrasis): Weber y Parsons describen la adquisición y el empleo del poder, Arendt su generación. Contraconcepto: violencia estructural (1976); poder administrativo y poder social autonomizado (1992).",
+      "nota_recepcion": "La frase sobre el «fenómeno fundamental del poder» circula en castellano atribuida a Arendt, cuando es la paráfrasis interpretativa de Habermas: caso de función autor en la recepción. Forti señala que la evaluación habermasiana se volvió un paradigma interpretativo de Arendt.",
+      "periodo": "1976–1992",
+      "verificacion": "parcial"
+    },
+    {
+      "id": "cita:habermas-1976-grundphanomen",
+      "tipo": "cita",
+      "original": "[REVISAR: original alemán no verificado]",
+      "traduccion": "El fenómeno fundamental del poder no es la instrumentalización de una voluntad ajena para los propios fines, sino la formación de una voluntad común en una comunicación orientada al entendimiento.",
+      "traduccion_fuente": "versión castellana en circulación (Perfiles filosófico-políticos) [REVISAR edición, traductor y página]",
+      "pagina": "[REVISAR]",
+      "verificacion": "parcial: circulación de la versión castellana verificada"
+    }
+  ],
+  "aristas": [
+    {
+      "origen": "autor:weber-max",
+      "destino": "def:poder:weber-max",
+      "tipo": "formula"
+    },
+    {
+      "origen": "def:poder:weber-max",
+      "destino": "concepto:poder",
+      "tipo": "define"
+    },
+    {
+      "origen": "autor:arendt-hannah",
+      "destino": "enfoque:poder-como-accion-concertada",
+      "tipo": "pertenece_a"
+    },
+    {
+      "origen": "autor:arendt-hannah",
+      "destino": "def:poder:arendt-hannah",
+      "tipo": "formula"
+    },
+    {
+      "origen": "def:poder:arendt-hannah",
+      "destino": "concepto:poder",
+      "tipo": "define"
+    },
+    {
+      "origen": "autor:habermas-jurgen",
+      "destino": "enfoque:poder-como-accion-concertada",
+      "tipo": "pertenece_a"
+    },
+    {
+      "origen": "autor:habermas-jurgen",
+      "destino": "obra:habermas-1976-hannah-arendts-begriff-der-macht",
+      "tipo": "escribe"
+    },
+    {
+      "origen": "autor:habermas-jurgen",
+      "destino": "obra:habermas-1992-faktizitat-und-geltung",
+      "tipo": "escribe"
+    },
+    {
+      "origen": "autor:habermas-jurgen",
+      "destino": "def:poder:habermas-jurgen",
+      "tipo": "formula"
+    },
+    {
+      "origen": "def:poder:habermas-jurgen",
+      "destino": "concepto:poder",
+      "tipo": "define"
+    },
+    {
+      "origen": "obra:habermas-1976-hannah-arendts-begriff-der-macht",
+      "destino": "def:poder:habermas-jurgen",
+      "tipo": "fuente_de"
+    },
+    {
+      "origen": "obra:habermas-1992-faktizitat-und-geltung",
+      "destino": "def:poder:habermas-jurgen",
+      "tipo": "fuente_de"
+    },
+    {
+      "origen": "obra:habermas-1976-hannah-arendts-begriff-der-macht",
+      "destino": "cita:habermas-1976-grundphanomen",
+      "tipo": "fuente_de"
+    },
+    {
+      "origen": "cita:habermas-1976-grundphanomen",
+      "destino": "def:poder:habermas-jurgen",
+      "tipo": "sostiene"
+    },
+    {
+      "origen": "def:poder:habermas-jurgen",
+      "destino": "metafora:flujo",
+      "tipo": "usa_modelo"
+    },
+    {
+      "origen": "def:poder:habermas-jurgen",
+      "destino": "metafora:medio-de-direccion",
+      "tipo": "usa_modelo"
+    },
+    {
+      "origen": "concepto:violencia-estructural",
+      "destino": "concepto:poder",
+      "tipo": "contraconcepto_de",
+      "segun": "def:poder:habermas-jurgen"
+    },
+    {
+      "origen": "def:poder:habermas-jurgen",
+      "destino": "def:poder:arendt-hannah",
+      "tipo": "variacion",
+      "eje": "eje:poder:imposicion-concertacion",
+      "formulacion": "Arendt: el poder surge de la pluralidad y de actuar juntos. Habermas: lo reformula como poder comunicativo, formación de una voluntad común en una comunicación orientada al entendimiento.",
+      "divergencia": "Arendt funda el poder en la acción concertada; Habermas, en el acuerdo racional orientado por pretensiones de validez. Habermas reintroduce además la acción estratégica y la violencia estructural, que Arendt dejaba fuera de lo político.",
+      "confianza": "alta"
+    },
+    {
+      "origen": "def:poder:habermas-jurgen",
+      "destino": "def:poder:weber-max",
+      "tipo": "recepcion",
+      "eje": "eje:poder:generacion-uso",
+      "formulacion": "Weber: el poder es probabilidad de imponer la propia voluntad. Habermas: conserva esa definición pero restringe su validez a la adquisición y el uso estratégico del poder y al poder administrativo; la generación del poder corresponde a la comunicación.",
+      "divergencia": null,
+      "confianza": "alta"
+    }
+  ]
+}
