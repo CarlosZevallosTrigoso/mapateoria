@@ -1,0 +1,296 @@
+{
+  "esquema": "glosario-grafo/1",
+  "exploracion": {
+    "id": "exp:poder",
+    "concepto": "concepto:poder",
+    "caso": null,
+    "fecha": "2026-10-05"
+  },
+  "ejes": [
+    {
+      "id": "eje:poder:descriptiva-normativa",
+      "concepto": "concepto:poder",
+      "polos": [
+        "descriptiva",
+        "normativa"
+      ],
+      "descripcion": "Si la definición suspende la cuestión de la legitimidad y describe cómo opera el poder, o exige criterios normativos para distinguir formas aceptables e inaceptables de poder."
+    }
+  ],
+  "nodos": [
+    {
+      "id": "concepto:poder",
+      "tipo": "concepto",
+      "etiqueta": "Poder",
+      "estado": "desarrollado"
+    },
+    {
+      "id": "concepto:dominacion",
+      "tipo": "concepto",
+      "etiqueta": "Dominación",
+      "estado": "pendiente"
+    },
+    {
+      "id": "concepto:legitimidad",
+      "tipo": "concepto",
+      "etiqueta": "Legitimidad",
+      "estado": "pendiente"
+    },
+    {
+      "id": "autor:habermas-jurgen",
+      "tipo": "autor",
+      "etiqueta": "Jürgen Habermas",
+      "nacimiento": 1929,
+      "muerte": 2026,
+      "estado": "desarrollado"
+    },
+    {
+      "id": "def:poder:habermas-jurgen",
+      "tipo": "definicion",
+      "etiqueta": "Poder comunicativo y poder administrativo",
+      "texto": "Habermas desdobla el concepto. El poder comunicativo es la capacidad que surge cuando los afectados forman, en una comunicación orientada al entendimiento y libre de coacción, una voluntad común; es su reformulación discursiva del poder arendtiano. Frente a él sitúa el poder que actores estratégicos adquieren y emplean para sus fines, y el poder administrativo, que funciona como medio de dirección del sistema estatal y coordina acciones sin pasar por el acuerdo, a la manera del dinero en la economía. El modelo es el de un flujo: el poder se genera en la esfera pública y el derecho lo traduce en decisiones administrativas. Sus atributos son la legitimidad derivada de razones aceptables, la dependencia de procedimientos y la vulnerabilidad ante formas de violencia estructural que bloquean la comunicación.",
+      "estatus": "formulada (poder comunicativo) y reconstruida (articulación con el poder administrativo)",
+      "premisas": [
+        "El fenómeno fundamental del poder es la formación de una voluntad común en una comunicación orientada al entendimiento.",
+        "El poder se genera comunicativamente, pero se adquiere y se emplea estratégicamente y circula como medio en el sistema administrativo."
+      ],
+      "atributos": [
+        "generado en la comunicación orientada al entendimiento",
+        "legitimidad derivada de razones aceptables",
+        "dependiente de procedimientos",
+        "traducido por el derecho en poder administrativo",
+        "vulnerable a la violencia estructural"
+      ],
+      "implicancias": "Usar esta definición convierte el poder en un problema de legitimidad medible por la calidad de la deliberación. Permite preguntar cómo se forma una voluntad común en la esfera pública, qué la distorsiona y si las decisiones administrativas la traducen o la eluden. Favorece métodos de reconstrucción normativa, estudios de deliberación, análisis de la esfera pública y de los medios, e investigación sobre procedimientos jurídicos y participativos. Su punto ciego es el poder que opera dentro de la comunicación misma: quién accede a la palabra, qué cuenta como argumento, qué exclusiones constituyen la esfera pública. Esa es la objeción que le harán Foucault, Fraser y Bourdieu. También privilegia lo lingüístico y deja en segundo plano los cuerpos, las imágenes y los objetos como vehículos de poder.",
+      "enfoque_y_contexto": "Teoría crítica de segunda generación: tránsito hacia la teoría de la acción comunicativa (1976) y teoría discursiva del derecho y la democracia (1992). Problema: la legitimidad del poder político en sociedades donde Estado y mercado se coordinan por medios que prescinden del acuerdo. En 1976 propone una división del trabajo (paráfrasis): Weber y Parsons describen la adquisición y el empleo del poder, Arendt su generación. Contraconcepto: violencia estructural (1976); poder administrativo y poder social autonomizado (1992).",
+      "nota_recepcion": "La frase sobre el «fenómeno fundamental del poder» circula en castellano atribuida a Arendt, cuando es la paráfrasis interpretativa de Habermas: caso de función autor en la recepción. Forti señala que la evaluación habermasiana se volvió un paradigma interpretativo de Arendt.",
+      "periodo": "1976–1992",
+      "verificacion": "parcial"
+    },
+    {
+      "id": "concepto:esfera-publica",
+      "tipo": "concepto",
+      "etiqueta": "Esfera pública",
+      "estado": "pendiente"
+    },
+    {
+      "id": "enfoque:teorias-feministas-del-poder",
+      "tipo": "enfoque",
+      "etiqueta": "Teorías feministas del poder",
+      "periodo": "1970–",
+      "texto": "Leen el poder como dominación patriarcal que alcanza lo íntimo y, en su desarrollo posterior, separan dominación, empoderamiento y solidaridad.",
+      "rango": "complementario",
+      "estado": "seleccionado"
+    },
+    {
+      "id": "autor:foucault-michel",
+      "tipo": "autor",
+      "etiqueta": "Michel Foucault",
+      "nacimiento": 1926,
+      "muerte": 1984,
+      "estado": "desarrollado"
+    },
+    {
+      "id": "autor:fraser-nancy",
+      "tipo": "autor",
+      "etiqueta": "Nancy Fraser",
+      "nacimiento": 1947,
+      "muerte": null,
+      "estado": "desarrollado"
+    },
+    {
+      "id": "obra:fraser-1981-foucault-on-modern-power",
+      "tipo": "obra",
+      "etiqueta": "Foucault sobre el poder moderno",
+      "titulo_original": "Foucault on Modern Power: Empirical Insights and Normative Confusions",
+      "anio_original": 1981,
+      "apa": "Fraser, N. (1981). Foucault on modern power: Empirical insights and normative confusions. Praxis International, 1(3), 272–287. [REVISAR número y páginas]. Recogido en Fraser, N. (1989). Unruly practices: Power, discourse, and gender in contemporary social theory. University of Minnesota Press."
+    },
+    {
+      "id": "obra:fraser-1990-rethinking-the-public-sphere",
+      "tipo": "obra",
+      "etiqueta": "Repensar la esfera pública",
+      "titulo_original": "Rethinking the Public Sphere: A Contribution to the Critique of Actually Existing Democracy",
+      "anio_original": 1990,
+      "apa": "Fraser, N. (1990). Rethinking the public sphere: A contribution to the critique of actually existing democracy. Social Text, (25/26), 56–80. [REVISAR páginas]"
+    },
+    {
+      "id": "metafora:capilaridad",
+      "tipo": "metafora",
+      "etiqueta": "capilaridad"
+    },
+    {
+      "id": "metafora:contrapublicos",
+      "tipo": "metafora",
+      "etiqueta": "contrapúblicos subalternos"
+    },
+    {
+      "id": "def:poder:foucault-michel",
+      "tipo": "definicion",
+      "etiqueta": "Poder como relaciones de fuerza y acción sobre acciones",
+      "texto": "Para Foucault, el poder es ante todo la multiplicidad de relaciones de fuerza inmanentes al dominio donde se ejercen y constitutivas de su organización. No se adquiere, no se posee ni se reparte: se ejerce desde puntos innumerables, en relaciones desiguales y móviles, y «el poder» es solo el nombre que se presta a una situación estratégica compleja en una sociedad dada. Su modelo es estratégico, de raíz bélica, y en 1982 se reformula como gobierno: una estructura de acciones sobre acciones posibles, que incita, induce o facilita. Sus atributos son la inmanencia, la productividad, porque genera saberes, cuerpos y sujetos, la ausencia de un centro soberano y la presencia constitutiva de la resistencia. Se define contra el modelo jurídico de la soberanía y la represión.",
+      "estatus": "formulada",
+      "premisas": [
+        "El poder no es una sustancia ni una institución, sino relaciones de fuerza inmanentes a los dominios donde se ejercen.",
+        "Los sujetos son efecto de relaciones de poder y saber, no su punto de partida."
+      ],
+      "atributos": [
+        "relacional e inmanente",
+        "se ejerce, no se posee",
+        "productivo (saberes, cuerpos, sujetos)",
+        "sin centro soberano",
+        "acompañado siempre de resistencia",
+        "acción sobre acciones posibles (1982)"
+      ],
+      "implicancias": "Esta definición desplaza la pregunta de quién tiene el poder a cómo se ejerce. Permite estudiar técnicas, dispositivos, arquitecturas, registros, saberes expertos y rutinas que producen sujetos normalizados, y leer el poder en lugares sin soberano visible. Favorece la genealogía, el análisis de archivos, la descripción de dispositivos y el estudio de las prácticas antes que de las intenciones. Deja fuera, o vuelve difícil, la distinción normativa entre formas aceptables e inaceptables de poder, porque suspende la cuestión de la legitimidad. También dispersa la responsabilidad: si el poder es una situación estratégica, cuesta atribuirlo a agentes. Por último, tiende a privilegiar el poder como producción de subjetividad por sobre la coerción material y la explotación económica.",
+      "enfoque_y_contexto": "Genealogía (1975–1982). Responde al modelo jurídico-discursivo que comparten la teoría liberal de la soberanía y el freudomarxismo, para el cual el poder es ley, prohibición y represión. El contexto incluye el después de 1968 y el trabajo del Grupo de Información sobre las Prisiones. Contraconceptos: soberanía y represión (la «hipótesis represiva»). En 1982 reformula el poder como gobierno o conducción de conductas, que supone sujetos libres.",
+      "periodo": "1975–1982",
+      "verificacion": "parcial"
+    },
+    {
+      "id": "def:poder:fraser-nancy",
+      "tipo": "definicion",
+      "etiqueta": "Poder capilar que exige criterios normativos",
+      "texto": "Fraser no ofrece una definición propia al modo de Weber o de Lukes; la suya se reconstruye a partir de su lectura de Foucault y de Habermas. Acepta el hallazgo foucaultiano: el poder moderno es capilar, opera en prácticas cotidianas, discursos expertos e instituciones, y produce más de lo que reprime. Sostiene, sin embargo, que una teoría del poder necesita criterios normativos para distinguir formas aceptables e inaceptables, porque sin ellos no puede justificar por qué resistir a la dominación. Contra Habermas, muestra que ese poder atraviesa también la esfera pública: las desigualdades de estatus, género y clase no quedan en suspenso al deliberar, y los grupos subordinados forman contrapúblicos para disputar la interpretación de sus necesidades.",
+      "estatus": "reconstruida",
+      "premisas": [
+        "El análisis empírico del poder moderno de Foucault es valioso.",
+        "Toda crítica del poder requiere fundamentos normativos explícitos.",
+        "La deliberación pública no está aislada de la dominación social."
+      ],
+      "atributos": [
+        "capilar y cotidiano",
+        "productivo",
+        "normativamente diferenciable",
+        "presente en la esfera pública",
+        "disputado en la interpretación de necesidades"
+      ],
+      "implicancias": "Usar esta definición permite combinar la descripción minuciosa de cómo opera el poder con la pregunta de si es justo. Lleva a investigar cómo las desigualdades de estatus se cuelan en espacios formalmente igualitarios, quién define qué cuenta como necesidad legítima y cómo los grupos subordinados construyen públicos propios. Favorece la crítica normativa situada, el análisis del discurso de las instituciones y el estudio de movimientos sociales. Su costo es que debe sostener criterios normativos que Foucault consideraba sospechosos, con el riesgo de reintroducir el sujeto autónomo que la genealogía había puesto en cuestión. Además, en esta etapa piensa sobre todo desde el capitalismo de bienestar del Norte, lo que limita su traslado directo a otros contextos.",
+      "enfoque_y_contexto": "Teoría crítica feminista (1981–1990). Responde a la recepción norteamericana de Foucault en la izquierda y el feminismo, y luego al modelo habermasiano de esfera pública. Su problema es cómo fundar una crítica emancipatoria que incorpore el análisis empírico del poder cotidiano. Contraconcepto: la dominación o subordinación, como forma inaceptable de poder que debe poder distinguirse de las demás.",
+      "periodo": "1981–1990",
+      "verificacion": "reconstruida"
+    },
+    {
+      "id": "cita:fraser-1981-why-resist",
+      "tipo": "cita",
+      "original": "Why is struggle preferable to submission? Why ought domination to be resisted?",
+      "traduccion": "¿Por qué es preferible la lucha a la sumisión? ¿Por qué debería resistirse a la dominación?",
+      "traduccion_fuente": "traducción propia",
+      "pagina": "[REVISAR]",
+      "verificacion": "no verificada [REVISAR literalidad y página]"
+    }
+  ],
+  "aristas": [
+    {
+      "origen": "autor:habermas-jurgen",
+      "destino": "def:poder:habermas-jurgen",
+      "tipo": "formula"
+    },
+    {
+      "origen": "def:poder:habermas-jurgen",
+      "destino": "concepto:poder",
+      "tipo": "define"
+    },
+    {
+      "origen": "autor:foucault-michel",
+      "destino": "def:poder:foucault-michel",
+      "tipo": "formula"
+    },
+    {
+      "origen": "def:poder:foucault-michel",
+      "destino": "concepto:poder",
+      "tipo": "define"
+    },
+    {
+      "origen": "autor:fraser-nancy",
+      "destino": "enfoque:teorias-feministas-del-poder",
+      "tipo": "pertenece_a"
+    },
+    {
+      "origen": "autor:fraser-nancy",
+      "destino": "obra:fraser-1981-foucault-on-modern-power",
+      "tipo": "escribe"
+    },
+    {
+      "origen": "autor:fraser-nancy",
+      "destino": "obra:fraser-1990-rethinking-the-public-sphere",
+      "tipo": "escribe"
+    },
+    {
+      "origen": "autor:fraser-nancy",
+      "destino": "def:poder:fraser-nancy",
+      "tipo": "formula"
+    },
+    {
+      "origen": "def:poder:fraser-nancy",
+      "destino": "concepto:poder",
+      "tipo": "define"
+    },
+    {
+      "origen": "obra:fraser-1981-foucault-on-modern-power",
+      "destino": "def:poder:fraser-nancy",
+      "tipo": "fuente_de"
+    },
+    {
+      "origen": "obra:fraser-1990-rethinking-the-public-sphere",
+      "destino": "def:poder:fraser-nancy",
+      "tipo": "fuente_de"
+    },
+    {
+      "origen": "obra:fraser-1981-foucault-on-modern-power",
+      "destino": "cita:fraser-1981-why-resist",
+      "tipo": "fuente_de"
+    },
+    {
+      "origen": "cita:fraser-1981-why-resist",
+      "destino": "def:poder:fraser-nancy",
+      "tipo": "sostiene"
+    },
+    {
+      "origen": "def:poder:fraser-nancy",
+      "destino": "metafora:capilaridad",
+      "tipo": "usa_modelo"
+    },
+    {
+      "origen": "def:poder:fraser-nancy",
+      "destino": "metafora:contrapublicos",
+      "tipo": "usa_modelo"
+    },
+    {
+      "origen": "concepto:dominacion",
+      "destino": "concepto:poder",
+      "tipo": "contraconcepto_de",
+      "segun": "def:poder:fraser-nancy"
+    },
+    {
+      "origen": "concepto:esfera-publica",
+      "destino": "concepto:poder",
+      "tipo": "vecino_de",
+      "segun": "def:poder:fraser-nancy"
+    },
+    {
+      "origen": "concepto:legitimidad",
+      "destino": "concepto:poder",
+      "tipo": "vecino_de",
+      "segun": "def:poder:fraser-nancy"
+    },
+    {
+      "origen": "def:poder:fraser-nancy",
+      "destino": "def:poder:foucault-michel",
+      "tipo": "recepcion",
+      "eje": "eje:poder:descriptiva-normativa",
+      "formulacion": "Foucault: el poder moderno es capilar y productivo, y su análisis suspende la cuestión de la legitimidad. Fraser: acepta el hallazgo empírico, pero sostiene que sin criterios normativos no puede explicarse por qué resistir a la dominación.",
+      "divergencia": null,
+      "confianza": "alta"
+    },
+    {
+      "origen": "def:poder:fraser-nancy",
+      "destino": "def:poder:habermas-jurgen",
+      "tipo": "resonancia",
+      "eje": "eje:poder:descriptiva-normativa",
+      "formulacion": "Habermas y Fraser: ambos exigen fundamentos normativos para la crítica del poder y sitúan la legitimidad en la deliberación pública.",
+      "divergencia": "Habermas aísla el poder comunicativo de la dominación; Fraser muestra que las desigualdades de estatus, género y clase atraviesan la propia esfera pública y que los subordinados necesitan contrapúblicos.",
+      "confianza": "alta"
+    }
+  ]
+}
